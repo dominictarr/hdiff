@@ -4,7 +4,7 @@ var change = require('../')
 var tape = require('tape')
 
 tape('simple', function (t) {
-  var p = change.object([
+  var p = change([
     {name: 'a1', A: 1, B: 2},
     {name: 'b2', A: 1, B: 2},
     {name: 'c3', A: 1, B: 2},
@@ -35,7 +35,7 @@ tape('simple', function (t) {
 
 tape('more complex', function (t) {
 
-  var p = change.object(
+  var p = change(
   {
     foo:[
       {name: 'a1', A: 1, B: 2},
@@ -46,7 +46,6 @@ tape('more complex', function (t) {
   }, {
     foo: [
       {name: 'a1', A: 1, B: 5},
-    //  {name: 'b2', A: 1, B: 2},
       {name: 'c3', A: 1, B: 2},
       {name: 'd4', x: ['A', 'B', 'C']},
     ],
@@ -72,7 +71,6 @@ tape('more complex', function (t) {
     }
   }
   t.deepEqual(p, expected)
-  //console.log(JSON.stringify(p, null, 2))
   t.end()
 
 })

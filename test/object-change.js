@@ -7,7 +7,7 @@ tape('update', function (t) {
 
   var e = { A: 1, B: { '$add': 3, '$del': 2 }, C: { '$add': 6 } }
 
-  var p = change.object({
+  var p = change({
     A: 1, B: 2
   }, {
     A: 1, B: 3, C: 6
@@ -22,7 +22,7 @@ tape('update / delete ', function (t) {
 
   var e = { A: 1, C: { '$add': 6 }, B: { '$del': 2 } }
 
-  var p2 = change.object({
+  var p2 = change({
     A: 1, B: 2
   }, {
     A: 1, C: 6
@@ -38,7 +38,7 @@ tape('array del', function (t) {
 
   var e = { A: 1, C: { '$add': [ 1, 3, 4 ] }, B: { '$del': 2 } }
 
-  var p3 = change.object({
+  var p3 = change({
     A: 1, B: 2
   }, {
     A: 1, C: [1, 3, 4]
@@ -53,7 +53,7 @@ tape('array 2', function (t) {
 
   var e = { A: 1, C: [ 1, { '$del': 4 }, 3, 4 ], B: { '$del': 2 } }
 
-  var p3 = change.object({
+  var p3 = change({
     A: 1, B: 2, C: [1, 4, 3, 4]
   }, {
     A: 1, C: [1, 3, 4]

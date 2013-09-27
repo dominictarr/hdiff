@@ -1,7 +1,7 @@
 
 var tape = require('tape')
 
-var change = require('../')
+var change = require('../').diffArray
 
 tape('simple', function (t) {
   var p = change([1, 2, 3], [1, 4, 2, 3])

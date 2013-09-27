@@ -61,7 +61,6 @@ function equal(a, b) {
 }
 
 var diff = require('adiff')({equal: equal}).diff
-//var m    = require('./')
 
 function getItem(a, name) {
   for(var i in a) {
@@ -95,9 +94,10 @@ function mapItem (a, iter) {
 }
 
 
-exports = module.exports = change
+exports = module.exports = diffObject
+exports.diffArray = diffArray
 
-function change (a, b) {
+function diffArray (a, b) {
   var p = diff(a, b)
   function csplice (index, del) {
     var inserts = [].slice.call(arguments, 2).map(function (e) {
@@ -131,7 +131,7 @@ function diffObject (a, b) {
     //this should never happen
     return {$add: b, $del: a}
   else if(isArray(a) && isArray(b)) {
-    return mapItem(change(a, b), function (x, name) {
+    return mapItem(diffArray(a, b), function (x, name) {
       var y = getItem(b, name)
       if(!y) return x
       var p = diffObject(x, y)
