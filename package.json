@@ -1,19 +1,20 @@
 {
   "name": "hdiff",
-  "description": "",
+  "description": "Human Readable JSON Diff",
   "version": "1.0.0",
   "homepage": "https://github.com/dominictarr/hdiff",
   "repository": {
     "type": "git",
     "url": "git://github.com/dominictarr/hdiff.git"
   },
+  "keywords": ["diff", "change"],
   "dependencies": {
+    "adiff": "~0.2.10"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "scripts": {
     "test": "set -e; for t in test/*.js; do node $t; done"
   },
   "author": "Dominic Tarr <dominic.tarr@gmail.com> (http://dominictarr.com)",
-  "license": "MIT"  
+  "license": "MIT"
 }
