@@ -136,9 +136,12 @@ exports.object = diffObject
 exports.getItem = getItem
 var isArray = Array.isArray
 
+function isDefined (u) {
+  return 'undefined' === typeof u
+}
+
 function diffObject (a, b, opts) {
   var unchanged = !(opts && opts.unchanged === false)
-  console.log('UNCHANGED', unchanged)
   var o = {}
 
   //XOR
@@ -150,7 +153,6 @@ function diffObject (a, b, opts) {
       var y = getItem(b, name)
       if(!y) return x
       var p = diffObject(x, y, {unchanged: unchanged})
-      console.log(p, unchanged)
       return p
     })
     return unchanged ? a : a.filter(hasChange)
@@ -159,7 +161,7 @@ function diffObject (a, b, opts) {
   //check for add, modify, and same
   for(var k in b) {
     //check for add
-    if(b[k] && !a[k])
+    if(isDefined(b[k]) && !isDefined(a[k]))
       o[k] = {$add: b[k]}
     //check for modifications.
     //TODO: detect if a keys are objects
@@ -170,8 +172,10 @@ function diffObject (a, b, opts) {
         if(unchanged && o[k] === undefined)
           delete o[k]
       }
-      else
+      else {
         o[k] = {$add: b[k], $del: a[k]}
+        console.log(o[k])
+      }
     } else {
       if(unchanged)
         o[k] = b[k]
@@ -180,7 +184,7 @@ function diffObject (a, b, opts) {
 
   //check for deletes
   for(var k in a) {
-    if(a[k] && !b[k])
+    if(isDefined(a[k]) && !isDefined(b[k]))
       o[k] = {$del: a[k]}
   }
 
