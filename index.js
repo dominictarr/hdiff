@@ -75,6 +75,21 @@ function getItem(a, name) {
 }
 
 
+function has(o, p) {
+  return Object.hasOwnProperty.call(o, p)
+}
+
+function hasChange (o) {
+  if(!isDeep(o))
+    return false
+  if(has(o, '$add') || has(o, '$del'))
+    return true
+  for(var k in o) {
+    if(hasChange(o[k])) return true
+  }
+  return false
+}
+
 function mapItem (a, iter) {
   var b = new Array(a.length)
   a.forEach(function (v, k) {
@@ -92,7 +107,6 @@ function mapItem (a, iter) {
   })
   return b
 }
-
 
 exports = module.exports = diffObject
 exports.diffArray = diffArray
@@ -122,8 +136,9 @@ exports.object = diffObject
 exports.getItem = getItem
 var isArray = Array.isArray
 
-
-function diffObject (a, b) {
+function diffObject (a, b, opts) {
+  var unchanged = !(opts && opts.unchanged === false)
+  console.log('UNCHANGED', unchanged)
   var o = {}
 
   //XOR
@@ -131,13 +146,14 @@ function diffObject (a, b) {
     //this should never happen
     return {$add: b, $del: a}
   else if(isArray(a) && isArray(b)) {
-    return mapItem(diffArray(a, b), function (x, name) {
+    var a =  mapItem(diffArray(a, b), function (x, name) {
       var y = getItem(b, name)
       if(!y) return x
-      var p = diffObject(x, y)
+      var p = diffObject(x, y, {unchanged: unchanged})
+      console.log(p, unchanged)
       return p
     })
-
+    return unchanged ? a : a.filter(hasChange)
   }
 
   //check for add, modify, and same
@@ -149,12 +165,17 @@ function diffObject (a, b) {
     //TODO: detect if a keys are objects
     //and diff them too.
     else if(b[k] !== a[k]) {
-      if(isDeep(b[k]) && isDeep(a[k]))
-        o[k] = diffObject(a[k], b[k])
+      if(isDeep(b[k]) && isDeep(a[k])) {
+        o[k] = diffObject(a[k], b[k], opts)
+        if(unchanged && o[k] === undefined)
+          delete o[k]
+      }
       else
         o[k] = {$add: b[k], $del: a[k]}
-    } else
-      o[k] = b[k]
+    } else {
+      if(unchanged)
+        o[k] = b[k]
+    }
   }
 
   //check for deletes
@@ -162,8 +183,13 @@ function diffObject (a, b) {
     if(a[k] && !b[k])
       o[k] = {$del: a[k]}
   }
- 
 
-  return o
+  if(unchanged)
+    return o
+ 
+  for(var k in o)
+    return o
+
+  return undefined
 }
 
