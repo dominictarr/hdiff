@@ -89,6 +89,8 @@ tape('example', function (t) {
       unchanged: false
     })
 
+  console.log(p)
+
   t.deepEqual(p, {foo: [
     {
       B: { $add: 5, $del: 2 }
@@ -132,6 +134,11 @@ tape('deep', function (t) {
   }
 
   console.log(
+    change(a, b, {unchanged: false})
+  )
+
+  console.log(
     JSON.stringify(change(a, b, {unchanged: false})))
 
+  t.end()
 })
