@@ -42,7 +42,7 @@ the renderer just has to detect ${add,del} and display those objects correctly.
 
 */
 function isDeep(o) {
-  return isArray(o) || (o && 'object' === typeof o)
+  return o && (isArray(o) || (o && 'object' === typeof o))
 }
 
 
@@ -137,7 +137,7 @@ exports.getItem = getItem
 var isArray = Array.isArray
 
 function isDefined (u) {
-  return 'undefined' === typeof u
+  return 'undefined' !== typeof u
 }
 
 function diffObject (a, b, opts) {
@@ -163,9 +163,7 @@ function diffObject (a, b, opts) {
     //check for add
     if(isDefined(b[k]) && !isDefined(a[k]))
       o[k] = {$add: b[k]}
-    //check for modifications.
-    //TODO: detect if a keys are objects
-    //and diff them too.
+    //check for update
     else if(b[k] !== a[k]) {
       if(isDeep(b[k]) && isDeep(a[k])) {
         o[k] = diffObject(a[k], b[k], opts)
@@ -173,8 +171,9 @@ function diffObject (a, b, opts) {
           delete o[k]
       }
       else {
-        o[k] = {$add: b[k], $del: a[k]}
-        console.log(o[k])
+        o[k] = isDefined(a[k])
+          ? {$add: b[k], $del: a[k]}
+          : {$add: b[k]}
       }
     } else {
       if(unchanged)
