@@ -107,3 +107,31 @@ tape('example', function (t) {
   t.end()
 })
 
+
+tape('deep', function (t) {
+
+  var a = {
+    a: true,
+    b: {
+      z: 7,
+      y: {
+        f: {m: true},
+        z: 5
+      }
+    }
+  }
+  var b = {
+    a: true,
+    b: {
+      z: 7,
+      y: {
+        f: {m: false},
+        z: 5
+      }
+    }
+  }
+
+  console.log(
+    JSON.stringify(change(a, b, {unchanged: false})))
+
+})
