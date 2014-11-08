@@ -15,50 +15,48 @@ each change is wrapped in an object with an `$add` and/or
 objects within an array require a `name` or `id` property (see below)
 otherwise, primitives within arrays are diffed as normal.
 
-``` js
-  var hdiff = require('hdiff')
+      var hdiff = require('hdiff')
 
-  var p = 
-  hdiff(
-    {
-      foo:[
-        {name: 'a1', A: 1, B: 2},
-        {name: 'b2', A: 1, B: 2},
-        {name: 'c3', A: 1, B: 2},
-        {name: 'd4', x: ['A', 'C', 'B']},
-      ]
-    }, {
-      foo: [
-        {name: 'a1', A: 1, B: 5},
-        {name: 'c3', A: 1, B: 2},
-        {name: 'd4', x: ['A', 'B', 'C']},
-      ],
-      bar: {baz: true}
-    })
+      var p =
+      hdiff(
+        {
+          foo:[
+            {name: 'a1', A: 1, B: 2},
+            {name: 'b2', A: 1, B: 2},
+            {name: 'c3', A: 1, B: 2},
+            {name: 'd4', x: ['A', 'C', 'B']},
+          ]
+        }, {
+          foo: [
+            {name: 'a1', A: 1, B: 5},
+            {name: 'c3', A: 1, B: 2},
+            {name: 'd4', x: ['A', 'B', 'C']},
+          ],
+          bar: {baz: true}
+        })
 
-  console.log(p)
-```
+      console.log(p)
+
 outputs:
-``` js
-[
-  {
-    name: "a1",
-    A: 1, B: { $add: 5, $del: 2 }
-  },
-  {
-    $add: {
-      name: "d4",
-      x: [ "A", "C", "B" ]
-    }
-  },
-  {
-    $del: { name: "b2", A: 1, B: 2 } 
-  },
-  {
-    name: "c3", A: 1, B: 2 
-  }
-]
-```
+
+    [
+      {
+        name: "a1",
+        A: 1, B: { $add: 5, $del: 2 }
+      },
+      {
+        $add: {
+          name: "d4",
+          x: [ "A", "C", "B" ]
+        }
+      },
+      {
+        $del: { name: "b2", A: 1, B: 2 }
+      },
+      {
+        name: "c3", A: 1, B: 2
+      }
+    ]
 
 # Objects within Arrays
 
@@ -68,52 +66,49 @@ so this is necessary.
 
 # show _only_ the changes.
 
-to filter out the properties that havn't changed,
-  var hdiff = require('hdiff')
+to filter out the properties that havn't changed
+    var hdiff = require('hdiff')
 
-  var p = 
-  hdiff(
-    {
-      foo:[
-        {name: 'a1', A: 1, B: 2},
-        {name: 'b2', A: 1, B: 2},
-        {name: 'c3', A: 1, B: 2},
-        {name: 'd4', x: ['A', 'C', 'B']},
-      ]
-    }, {
-      foo: [
-        {name: 'a1', A: 1, B: 5},
-        {name: 'c3', A: 1, B: 2},
-        {name: 'd4', x: ['A', 'B']},
-      ],
-      bar: {baz: true}
-    },
+    var p =
+    hdiff(
+      {
+        foo:[
+          {name: 'a1', A: 1, B: 2},
+          {name: 'b2', A: 1, B: 2},
+          {name: 'c3', A: 1, B: 2},
+          {name: 'd4', x: ['A', 'C', 'B']},
+        ]
+      }, {
+        foo: [
+          {name: 'a1', A: 1, B: 5},
+          {name: 'c3', A: 1, B: 2},
+          {name: 'd4', x: ['A', 'B']},
+        ],
+        bar: {baz: true}
+      },
 
-    //UNCHANGED = false on show differences.
-    {
-      unchanged: false
-    })
+      //UNCHANGED = false on show differences.
+      {
+        unchanged: false
+      })
 
-  console.log(p)
-```
+    console.log(p)
+
 outputs:
-``` js
-{foo: [
-    {
-      B: { $add: 5, $del: 2 }
-    },
-    {
-      x: [ {$del: "B"} ]
-    },
-    {
-      $del: { name: "b2", A: 1, B: 2 } 
+
+    {foo: [
+        {
+          B: { $add: 5, $del: 2 }
+        },
+        {
+          x: [ {$del: "B"} ]
+        },
+        {
+          $del: { name: "b2", A: 1, B: 2 }
+        }
+      ],
+      bar: {$add: {baz: true}}
     }
-  ],
-  bar: {$add: {baz: true}}
-}
-```
-
-
 
 ## License
 
